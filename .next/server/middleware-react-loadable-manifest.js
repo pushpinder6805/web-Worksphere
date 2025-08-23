@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST="{\"lib/api.ts -> ./auth\":{\"id\":\"lib/api.ts -> ./auth\",\"files\":[]}}"
