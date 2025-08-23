@@ -1,9 +1,11 @@
 'use client';
-import { clearToken, get, patch, post, setToken } from '@/lib/api';
+import { get, patch, post } from '@/lib/api';
+import { useAuth } from '@/hooks/useAuth';
+import { logout } from '@/lib/auth';
 import { useEffect, useState } from 'react';
 
 export default function SettingsPage() {
-  const [token, setTokenState] = useState<string>('');
+  const { user, token } = useAuth();
   const [advisor, setAdvisor] = useState<any>(null);
   const [err, setErr] = useState('');
   const [forms, setForms] = useState<any>({
@@ -16,12 +18,8 @@ export default function SettingsPage() {
   });
 
   useEffect(() => {
-    const t = localStorage.getItem('ws_token') || '';
-    setTokenState(t);
     get('/api/v1.0/profile/advisor/').then(setAdvisor).catch(()=>{});
   }, []);
-
-  const saveToken = () => { setToken(token); alert('Token saved'); };
 
   const doPatch = async (path:string, body:any) => {
     try { await patch(path, body); alert('Saved'); }
@@ -36,11 +34,28 @@ export default function SettingsPage() {
   return (
     <div className="grid gap-4 md:grid-cols-2">
       <div className="card">
-        <h1 className="text-xl font-semibold mb-2">Auth</h1>
-        <input className="input" placeholder="Paste Bearer token" value={token} onChange={e=>setTokenState(e.target.value)} />
-        <div className="flex gap-2 mt-2">
-          <button className="btn btn-primary" onClick={saveToken}>Save</button>
-          <button className="btn" onClick={()=>{ clearToken(); setTokenState(''); }}>Clear</button>
+        <h1 className="text-xl font-semibold mb-2">Account</h1>
+        {user && (
+          <div className="space-y-2 mb-4">
+            <div className="text-sm">
+              <span className="font-medium">Username:</span> {user.username}
+            </div>
+            <div className="text-sm">
+              <span className="font-medium">Email:</span> {user.email}
+            </div>
+            {user.is_advisor && (
+              <div className="text-sm">
+                <span className="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                  Advisor Account
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+        <div className="flex gap-2">
+          <button className="btn text-red-600 border-red-200 hover:bg-red-50" onClick={logout}>
+            Sign Out
+          </button>
         </div>
         {err && <p className="text-red-600 text-sm mt-2">{err}</p>}
       </div>
