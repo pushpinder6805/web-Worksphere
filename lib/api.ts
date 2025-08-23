@@ -10,6 +10,11 @@ function getBase() {
   return envBase.replace(/\/$/, '');
 }
 
+export function getToken(): string | null {
+  // Use the auth module's getToken function
+  return getToken();
+}
+
 export async function api<T=any>(path: string, options: { method?: HttpMethod, body?: any, token?: string | null, headers?: Record<string,string> } = {}): Promise<T> {
   const base = getBase();
   const url = path.startsWith('http') ? path : `${base}${path}`;
