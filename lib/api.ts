@@ -31,3 +31,16 @@ export async function api<T = any>(
 
   return res.json();
 }
+
+// ✅ Convenience helpers
+export const get = <T = any>(path: string, token?: string | null) =>
+  api<T>(path, { method: 'GET', token });
+
+export const post = <T = any>(path: string, body: any, token?: string | null) =>
+  api<T>(path, { method: 'POST', body, token });
+
+export const patch = <T = any>(path: string, body: any, token?: string | null) =>
+  api<T>(path, { method: 'PATCH', body, token });
+
+export const del = <T = any>(path: string, token?: string | null) =>
+  api<T>(path, { method: 'DELETE', token });
