@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 255 255 255;
+  --fg: 15 23 42;
+}
+
+html, body, #__next { height: 100%; }
+body { background: rgb(var(--bg)); color: rgb(var(--fg)); }
+.container { @apply mx-auto max-w-6xl px-4; }
+.card { @apply rounded-2xl shadow p-4 bg-white border border-gray-100; }
+.btn { @apply inline-flex items-center justify-center rounded-xl px-4 py-2 border text-sm; }
+.btn-primary { @apply border-gray-900; }
+.input { @apply border rounded-xl px-3 py-2 w-full; }
+.label { @apply text-sm font-medium text-gray-700; }
+.navlink { @apply px-3 py-2 rounded-lg hover:bg-gray-100; }
+.navactive { @apply bg-gray-900 text-white hover:bg-gray-900; }
