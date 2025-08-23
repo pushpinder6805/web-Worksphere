@@ -8,7 +8,9 @@ const links = [
   { href: '/appointments', label: 'Appointments' },
   { href: '/wallet', label: 'Wallet' },
   { href: '/settings', label: 'Settings' },
-];
+] as const;
+
+
 
 export default function Nav() {
   const pathname = usePathname();
