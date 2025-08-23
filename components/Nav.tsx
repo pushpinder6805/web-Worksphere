@@ -1,14 +1,16 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import type { Route } from "next";
 
-const links = [
-  { href: '/', label: 'Dashboard' },
-  { href: '/advisors', label: 'Advisors' },
-  { href: '/appointments', label: 'Appointments' },
-  { href: '/wallet', label: 'Wallet' },
-  { href: '/settings', label: 'Settings' },
-] as const;
+const links: { href: Route; label: string }[] = [
+  { href: "/", label: "Dashboard" },
+  { href: "/advisors", label: "Advisors" },
+  { href: "/appointments", label: "Appointments" },
+  { href: "/wallet", label: "Wallet" },
+  { href: "/settings", label: "Settings" },
+];
+
 
 
 
