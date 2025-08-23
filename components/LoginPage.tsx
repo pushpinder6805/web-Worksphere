@@ -4,46 +4,9 @@ import { useState } from 'react';
 import { getDiscourseLoginUrl, setToken, setUser } from '@/lib/auth';
 
 export default function LoginPage() {
-  const [manualToken, setManualToken] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleDiscourseLogin = () => {
     window.location.href = getDiscourseLoginUrl();
-  };
-
-  const handleManualLogin = async () => {
-    if (!manualToken.trim()) return;
-    
-    setIsLoading(true);
-    try {
-      // Try to fetch profile with the provided token to validate it
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/v1.0/profile/`, {
-        headers: {
-          'Authorization': `Bearer ${manualToken}`,
-          'Accept': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        const profile = await response.json();
-        setToken(manualToken);
-        setUser({
-          id: profile.id || 1,
-          username: profile.username || profile.email || 'User',
-          email: profile.email || '',
-          name: profile.name || profile.username || '',
-          avatar_url: profile.avatar_url || '',
-          is_advisor: profile.is_advisor || false,
-        });
-      } else {
-        alert('Invalid token. Please check your token and try again.');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('Failed to login. Please check your connection and try again.');
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
@@ -73,33 +36,6 @@ export default function LoginPage() {
             >
               Continue with Discourse
             </button>
-          </div>
-
-          {/* Manual Token Entry */}
-          <div className="card">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
-              Or use API Token
-            </h3>
-            <p className="text-sm text-gray-600 mb-4">
-              If you have an API token, you can enter it directly
-            </p>
-            <div className="space-y-3">
-              <input
-                type="password"
-                className="input"
-                placeholder="Enter your API token"
-                value={manualToken}
-                onChange={(e) => setManualToken(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleManualLogin()}
-              />
-              <button
-                onClick={handleManualLogin}
-                disabled={!manualToken.trim() || isLoading}
-                className="w-full btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? 'Signing in...' : 'Sign in with Token'}
-              </button>
-            </div>
           </div>
 
           <div className="text-center">
