@@ -88,35 +88,35 @@ export function getStoredUser(): User | null {
 // Initialize auth state from localStorage
 export function initializeAuth() {
   if (typeof window === 'undefined') return;
-
+  
   const token = getToken();
   const user = getStoredUser();
-
+  
   authState = {
     user,
     token,
     isLoading: false,
     isAuthenticated: !!(token && user),
   };
-
+  
   notifyListeners();
 }
 
 /* ------------------------------------------------------------------
-   SSO DISABLED — no redirects to Discourse, no callback handling
+   SSO DISABLED — no redirects, no callback processing
 -------------------------------------------------------------------*/
 
-// SSO login disabled
+// Disable login via Discourse SSO
 export function getDiscourseLoginUrl(): string {
-  return "/"; // Disable SSO login completely
+  return "/"; // disabling SSO login
 }
 
-// Ignore SSO callbacks
-export function handleDiscourseCallback() {
-  return false; // Do not process any SSO login
+// Ignore SSO callback but keep TypeScript happy
+export function handleDiscourseCallback(_params?: URLSearchParams) {
+  return false; // SSO permanently disabled
 }
 
-// Logout without redirecting to Discourse
+// Logout without redirecting to Discourse SSO
 export function logout() {
   clearToken();
   // No SSO logout redirect
