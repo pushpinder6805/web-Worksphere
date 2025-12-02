@@ -88,67 +88,36 @@ export function getStoredUser(): User | null {
 // Initialize auth state from localStorage
 export function initializeAuth() {
   if (typeof window === 'undefined') return;
-  
+
   const token = getToken();
   const user = getStoredUser();
-  
+
   authState = {
     user,
     token,
     isLoading: false,
     isAuthenticated: !!(token && user),
   };
-  
+
   notifyListeners();
 }
 
-// Discourse SSO integration
+/* ------------------------------------------------------------------
+   SSO DISABLED — no redirects to Discourse, no callback handling
+-------------------------------------------------------------------*/
+
+// SSO login disabled
 export function getDiscourseLoginUrl(): string {
-  const baseUrl = process.env.NEXT_PUBLIC_DISCOURSE_URL || 'https://your-discourse-site.com';
-  const returnUrl = encodeURIComponent(window.location.origin + '/auth/callback');
-  return `${baseUrl}/session/sso_provider?return_sso_url=${returnUrl}`;
+  return "/"; // Disable SSO login completely
 }
 
-export function handleDiscourseCallback(params: URLSearchParams) {
-  const sso = params.get('sso');
-  const sig = params.get('sig');
-  
-  if (sso && sig) {
-    // In a real implementation, you'd verify the signature server-side
-    // For now, we'll decode the SSO payload (this should be done securely on your backend)
-    try {
-      const decoded = atob(sso);
-      const ssoParams = new URLSearchParams(decoded);
-      
-      const user: User = {
-        id: parseInt(ssoParams.get('external_id') || '0'),
-        username: ssoParams.get('username') || '',
-        email: ssoParams.get('email') || '',
-        name: ssoParams.get('name') || '',
-        avatar_url: ssoParams.get('avatar_url') || '',
-      };
-      
-      // You would typically exchange this for a JWT token from your backend
-      const token = `discourse_${user.id}_${Date.now()}`;
-      
-      setToken(token);
-      setUser(user);
-      
-      return true;
-    } catch (error) {
-      console.error('Failed to process Discourse callback:', error);
-      return false;
-    }
-  }
-  
-  return false;
+// Ignore SSO callbacks
+export function handleDiscourseCallback() {
+  return false; // Do not process any SSO login
 }
 
+// Logout without redirecting to Discourse
 export function logout() {
   clearToken();
-  // Optionally redirect to Discourse logout
-  const discourseUrl = process.env.NEXT_PUBLIC_DISCOURSE_URL;
-  if (discourseUrl) {
-    window.location.href = `${discourseUrl}/session/sso_provider_logout?return_url=${encodeURIComponent(window.location.origin)}`;
-  }
+  // No SSO logout redirect
 }
